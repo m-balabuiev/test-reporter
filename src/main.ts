@@ -33,6 +33,7 @@ async function main(): Promise<void> {
   const listTests = core.getInput('list-tests', {required: true})
   const maxAnnotations = parseInt(core.getInput('max-annotations', {required: true}))
   const failOnError = core.getInput('fail-on-error', {required: true}) === 'true'
+  const failOnEmpty = core.getInput('fail-on-empty', {required: true}) === 'true'
   const workDirInput = core.getInput('working-directory', {required: false})
   const token = core.getInput('token', {required: true})
 
@@ -75,7 +76,7 @@ async function main(): Promise<void> {
   const parser = getParser(reporter, options)
 
   const files = await getFiles(path)
-  if (files.length === 0) {
+  if (files.length === 0 && failOnEmpty) {
     core.setFailed(`No file matches path '${path}'`)
     return
   }
